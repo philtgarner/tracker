@@ -1,0 +1,101 @@
+html, body {
+	height: 100%;
+	margin: 0;
+	padding: 0;
+	background-color: #e1f9e1;
+}
+
+#map-canvas {
+	height: calc(100% - 100px);
+	margin: 0;
+	padding: 0;
+}
+
+#info {
+	height: 100px;
+	background-color: #33AD33;
+	margin: 0;
+	padding: 0;
+}
+
+.info_item {
+	width: 25%;
+	height: 100px;
+	background-color:#66C266;
+	margin: 0;
+	padding: 0;
+	display: inline-block;
+	vertical-align: top;
+}
+
+.info_item img {
+	display: block;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+.info_item p {
+	text-align: center;
+	font-family: 'Yanone Kaffeesatz',sans-serif;
+	font-size: 20px;
+	padding: 0;
+	margin: 0;
+}
+
+#launcher{
+	padding: 20px;
+}
+
+#launcher h1{
+	font-family: 'Roboto', sans-serif;
+	font-size: 400%;
+	text-align: center;
+	font-weight: 100; 
+}
+
+#launcher p{
+	font-family: 'Roboto', sans-serif;
+	text-align: center;
+	font-weight: 300; 
+}
+
+#launcher img#header{
+	margin-left: auto;
+	margin-right: auto;
+	display: block;
+	width: 100px;
+}
+
+#launcher form input{
+	display: block;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+#launcher input[type="submit"]{
+    font-family: 'Roboto', sans-serif;
+	font-weight: 500; 
+    color: #ffffff;
+    font-size: 20px;
+    background: #33AD33;
+    padding: 10px 20px 10px 20px;
+    text-decoration: none;
+    text-transform: uppercase;
+    border: 0;
+    margin-top: 10px;
+    margin-left: auto;
+    margin-right: auto;
+    display: block;
+}
+#launcher input[type="submit"]:hover{
+    background: #66C266;
+    text-decoration: none;
+}
+#launcher input[type="submit"]:disabled{
+    background: #616161;
+    text-decoration: none;
+}
+#launcher input[type="submit"]:active{
+    position:relative;
+    top:1px;
+}
