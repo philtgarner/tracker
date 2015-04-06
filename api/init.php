@@ -101,7 +101,7 @@ if(isset($_GET['down']) && isset($_GET['reset']) && isset($_GET['device'])){
 }
 
 //Build the response into a nice JSON string and output it.
-$response = array("success" => $output, "key" => $up, "device" => $device, "owner"=>$owner);
+$response = array("success" => $output, "key" => $up, "device" => $device);
 header('Content-Type: application/json');
 echo json_encode($response);
 ?>
