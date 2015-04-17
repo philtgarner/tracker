@@ -65,7 +65,7 @@
 			var marker;
 			var historyPath;
 			var time = <?php echo $current_time; ?>;
-			var dl = '<?php echo $pass; ?>';
+			var dl = '<?php echo $dl; ?>';
 			//The frequency with which the timer is updated (milliseconds)
 			var updateTimer = 1000;
 			//The frequency with which the map is updated (milliseconds)
