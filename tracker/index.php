@@ -45,14 +45,14 @@
 		<!-- Android notification bar colour -->
 		<meta name="theme-color" content="#009900">
 		<!-- Set the favicon -->
-		<link rel="shortcut icon" href="favicon.png" />
+		<link rel="shortcut icon" href="../resources/favicon.png" />
 		<title>Location tracker | PTG</title>
 		<!-- Get the fonts from Google -->
 		<link href='http://fonts.googleapis.com/css?family=Yanone+Kaffeesatz:400,200' rel='stylesheet' type='text/css'>
 		<!-- Set the zoom stuff for mobile devices -->
 		<meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0' name='viewport' />
 		<!-- Set the share icon for Facebook -->
-		<meta property="og:image" content="icon.png"/>
+		<meta property="og:image" content="../resources/icon.png"/>
 		<!-- Get the CSS file -->
 		<link href='../resources/main.css' rel='stylesheet' type='text/css'>
 		<!-- Get the Google Maps JavaScript library -->
