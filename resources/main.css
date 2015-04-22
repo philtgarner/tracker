@@ -19,9 +19,9 @@ html, body {
 }
 
 .info_item {
-	width: 25%;
+	width: 20%;
 	height: 100px;
-	background-color:#66C266;
+	background-color:#008000;
 	margin: 0;
 	padding: 0;
 	display: inline-block;
@@ -40,6 +40,7 @@ html, body {
 	font-size: 20px;
 	padding: 0;
 	margin: 0;
+	color: #ffffff;
 }
 
 #launcher{

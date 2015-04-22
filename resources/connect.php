@@ -11,18 +11,26 @@ The following is an example API key, to generate your own:
  - Click "Credentials" under the "APIs & auth" in the left hand menu
  - Create a new API key and copy it into the variable below, it will look similar to this example one
 */
-$GOOGLE_MAPS_API = "AIzaSyCNVRCL5p4Byw-UJqxfmhpdeAwyEIDeonE";
+$GOOGLE_MAPS_API = "AIzaSyAyGbRV7R-QKqRumYvtwZHmi8d9oi9KZU0";
 
 try{
-	//Connect to the SQLite database with the name provided above
 	$pdo = new PDO('sqlite:../db/' . $DB_NAME);
-	//Set PDO to throw exceptions
 	$pdo->setAttribute(PDO::ATTR_ERRMODE,PDO::ERRMODE_EXCEPTION);
-	//Turn on foreign keys
+	//Turn of foreign keys
 	$pdo->exec( 'PRAGMA foreign_keys = ON;' );
 
 }catch(PDOException $e){
-	//If it all goes wrong, this should never be thrown.
 	echo $e->getMessage();
 }
+
+function distance($lat1, $lon1, $lat2, $lon2) {
+	$theta = $lon1 - $lon2;
+	$dist = sin(deg2rad($lat1)) * sin(deg2rad($lat2)) +  cos(deg2rad($lat1)) * cos(deg2rad($lat2)) * cos(deg2rad($theta));
+	$dist = acos($dist);
+	$dist = rad2deg($dist);
+	$miles = $dist * 60 * 1.1515;
+
+	return ($miles * 1.609344);
+}
+
 ?>

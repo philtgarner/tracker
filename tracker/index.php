@@ -18,9 +18,13 @@
 		$history = array();
 		$current_lat = 0;
 		$current_long = 0;
+		$prev_lat = 0;
+		$prev_long = 0;
 		$current_speed = 0;
 		$current_altitude = 0;
 		$current_time = 0;
+		$count = 0;
+		$distance = 0;
 		//Build the results up
 		while($row = $statement->fetch(PDO::FETCH_ASSOC)){
 			$h = array('latitude' => $row['lat'], 'longditude' => $row['long'], 'speed' => $row['speed'], 'altitude' => $row['altitude']);
@@ -31,6 +35,31 @@
 			$current_speed = $row['speed'];
 			$current_altitude = $row['altitude'];
 			$current_time = $row['date_time'];
+			
+			//Add the distance between this point and the previous to the total distance
+			if($count > 0){
+				$distance += distance($current_lat, $current_long, $prev_lat, $prev_long);
+			}
+			
+			//Store the current positions as the previous for the next iteration
+			$prev_lat = $current_lat;
+			$prev_long = $current_long;
+			
+			//Increase the counter
+			$count++;
+		}
+		
+		//Get the current URL to work out if they've come here via /tracker/?dl=abc OR /track/abc
+		//Redirect them to the nice URL if need be
+		$url_components = explode('/',$_SERVER['REQUEST_URI']);
+		if(is_array($url_components)){
+			$length = sizeof($url_components);
+			$index = $length - 2;
+			if($index >= 0){
+				if($url_components[$index] == 'tracker'){
+					header("Location: ../track/$dl");
+				}
+			}
 		}
 	}
 	//If the download key is not set send the user back to the home page
@@ -65,6 +94,7 @@
 			var marker;
 			var historyPath;
 			var time = <?php echo $current_time; ?>;
+			var distance = <?php echo $distance; ?>;
 			var dl = '<?php echo $dl; ?>';
 			//The frequency with which the timer is updated (milliseconds)
 			var updateTimer = 1000;
@@ -87,7 +117,7 @@
 				//The AJAX call to update the map
 				$.ajax({
 					type: 'GET',
-					url: './mapupdate.php',
+					url: '../tracker/mapupdate.php',
 					data: {dl: dl, timestamp: time},
 					dataType: 'json',
 					success: function (success){
@@ -98,12 +128,15 @@
 						
 							//Update current stats
 							time = success.time;	//The time will get updated within one second
+							distance += success.distance;
 							$('#speed_mph').html(msToMPH(success.speed));
 							$('#speed_kph').html(msToKPH(success.speed));
 							$('#speed_min_mile').html(msToMinMile(success.speed));
 							$('#speed_min_km').html(msToMinKM(success.speed));
 							$('#alt_m').html(success.altitude);
 							$('#alt_ft').html(mToFt(success.altitude));
+							$('#distance_km').html(distance.toFixed(2));
+							$('#distance_miles').html(kmToMiles(distance));
 							
 							//Update the path
 							var latestPos;
@@ -132,6 +165,11 @@
 			function msToMPH(ms){
 				var mph = ms * 2.23693629;
 				return (mph).toFixed(1);
+			}
+			
+			function kmToMiles(km){
+				var miles = km * 0.621371192;
+				return miles.toFixed(2);
 			}
 			
 			//Convert metres per second to kilometers per hour
@@ -276,6 +314,9 @@
 			$('#alt_m').html(<?php echo $current_altitude;?>);
 			$('#alt_ft').html(mToFt(<?php echo $current_altitude;?>));
 			$('#time_ago').html(millisToTime(time));
+			$('#distance_km').html(distance.toFixed(2));
+			$('#distance_miles').html(kmToMiles(distance));
+			
 
 			//Get the users position
 			if (navigator.geolocation) {
@@ -287,7 +328,7 @@
 	</head>
 	<body>
 		<div id="info">
-			<div id="speed_bike" class="info_item"><img src="../resources/bike.png"/><p><span id="speed_mph">0</span>mph / <span id="speed_kph">0</span>kph</p></div><div id="speed_run" class="info_item"><img src="../resources/run.png"/><p><span id="speed_min_mile">0:00</span>/mile / <span id="speed_min_km">0:00</span>/km</p></div><div id="altitude" class="info_item"><img src="../resources/altitude.png"/><p><span id="alt_ft">0</span>ft / <span id="alt_m">0</span>m</p></div><div id="time" class="info_item"><img src="../resources/time.png"/><p><span id="time_ago">0:00</span> ago</p></div>
+			<div id="speed_bike" class="info_item"><img src="../resources/bike.png"/><p><span id="speed_mph">0</span>mph / <span id="speed_kph">0</span>kph</p></div><div id="speed_run" class="info_item"><img src="../resources/run.png"/><p><span id="speed_min_mile">0:00</span>/mile / <span id="speed_min_km">0:00</span>/km</p></div><div id="altitude" class="info_item"><img src="../resources/altitude.png"/><p><span id="alt_ft">0</span>ft / <span id="alt_m">0</span>m</p></div><div id="time" class="info_item"><img src="../resources/time.png"/><p><span id="time_ago">0:00</span> ago</p></div><div id="distance" class="info_item"><img src="../resources/distance.png"/><p><span id="distance_miles">0</span>miles / <span id="distance_km">0</span>km</p></div>
 		</div>
 		<div id="map-canvas"></div>
 	</body>
