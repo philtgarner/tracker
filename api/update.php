@@ -2,13 +2,13 @@
 $output = false;
 
 //The information we need to update is the position (latitude and longditude) and the password (upload key) and the date/time
-if(isset($_GET['lat']) && isset($_GET['long']) && isset($_GET['pass']) && isset($_GET['dt'])){
-	$lat = $_GET['lat'];
-	$long = $_GET['long'];
-	$pass = $_GET['pass'];
-	$dt = $_GET['dt'];
-	$speed = $_GET['speed'];
-	$altitude = $_GET['alt'];
+if(isset($_POST['lat']) && isset($_POST['long']) && isset($_POST['pass']) && isset($_POST['dt'])){
+	$lat = $_POST['lat'];
+	$long = $_POST['long'];
+	$pass = $_POST['pass'];
+	$dt = $_POST['dt'];
+	$speed = $_POST['speed'];
+	$altitude = $_POST['alt'];
 	
 	//Connect to the database
 	include '../resources/connect.php';
