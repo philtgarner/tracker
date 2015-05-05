@@ -48,48 +48,65 @@ if(isset($_GET['down']) && isset($_GET['reset']) && isset($_GET['device'])){
 		altitude REAL,
 		FOREIGN KEY(upload) REFERENCES pairs(upload)
 		);');
-
-		//Check to see if the upload key exists already (i.e. this download key has been used before)
-		$sql = "SELECT upload, device FROM pairs WHERE download = :dl";
-		$statement = $pdo->prepare($sql);
-		$statement->bindValue(':dl', $down, PDO::PARAM_STR);
-		$statement->execute();
-		//If the upload key has been used before then store the upload key and the ID of its owner
-		if($row = $statement->fetch(PDO::FETCH_ASSOC)){
-			$up = $row['upload'];
-			$owner = $row['device'];
-			$output = true;
-		}
 		
-		//If the upload key doesn't exist, add it
-		if($output == false){
-			$sql = "INSERT INTO pairs (download, upload, device) VALUES (:dl, :ul, :dev)";
+		$device_max_reached = false;
+		//Check to see if we're at the maximum device limit. If $MAX_DEVICES is < 0 then no need to check - unlimited devices allowed.
+		if($MAX_DEVICES >= 0){
+			$sql = "SELECT COUNT(DISTINCT device) AS cnt FROM pairs";
 			$statement = $pdo->prepare($sql);
-			$statement->bindValue(':dl', $down, PDO::PARAM_STR);
-			$statement->bindValue(':ul', $up, PDO::PARAM_STR);
-			$statement->bindValue(':dev', $device, PDO::PARAM_STR);
 			$statement->execute();
-
-			$rows = $statement->rowCount();
-			//If we had to insert the down/upload keys then it must be the first time its been used, this is the owner.
-			if($rows > 0){
-				$output = true;
-				$owner = $device;
+			//If the upload key has been used before then store the upload key and the ID of its owner
+			if($row = $statement->fetch(PDO::FETCH_ASSOC)){
+				if($row['cnt'] >= $MAX_DEVICES){
+					$device_max_reached = true;
+				}
 			}
 		}
 		
-		//Check if this device is the owner, if its not then return false
-		if($device != $owner){
-			$output = false;
-		}
-		//If this device is the owner then check if reset is needed
-		else{
-			//If reset is needed then delete old entries.
-			if($reset){
-				$sql = "DELETE FROM gps WHERE upload = :ul";
+		if(!$device_max_reached){
+
+			//Check to see if the upload key exists already (i.e. this download key has been used before)
+			$sql = "SELECT upload, device FROM pairs WHERE download = :dl";
+			$statement = $pdo->prepare($sql);
+			$statement->bindValue(':dl', $down, PDO::PARAM_STR);
+			$statement->execute();
+			//If the upload key has been used before then store the upload key and the ID of its owner
+			if($row = $statement->fetch(PDO::FETCH_ASSOC)){
+				$up = $row['upload'];
+				$owner = $row['device'];
+				$output = true;
+			}
+			
+			//If the upload key doesn't exist, add it
+			if($output == false){
+				$sql = "INSERT INTO pairs (download, upload, device) VALUES (:dl, :ul, :dev)";
 				$statement = $pdo->prepare($sql);
+				$statement->bindValue(':dl', $down, PDO::PARAM_STR);
 				$statement->bindValue(':ul', $up, PDO::PARAM_STR);
+				$statement->bindValue(':dev', $device, PDO::PARAM_STR);
 				$statement->execute();
+
+				$rows = $statement->rowCount();
+				//If we had to insert the down/upload keys then it must be the first time its been used, this is the owner.
+				if($rows > 0){
+					$output = true;
+					$owner = $device;
+				}
+			}
+			
+			//Check if this device is the owner, if its not then return false
+			if($device != $owner){
+				$output = false;
+			}
+			//If this device is the owner then check if reset is needed
+			else{
+				//If reset is needed then delete old entries.
+				if($reset){
+					$sql = "DELETE FROM gps WHERE upload = :ul";
+					$statement = $pdo->prepare($sql);
+					$statement->bindValue(':ul', $up, PDO::PARAM_STR);
+					$statement->execute();
+				}
 			}
 		}
 	}
