@@ -1,52 +1,61 @@
 <?php
 	//Make sure the download key is set
-	if(isset($_GET['dl'])){
+	if(isset($_GET['dl']) && strlen($_GET['dl']) > 0){
 		$dl = $_GET['dl'];
 		
 		//Connect to the database
 		include '../resources/connect.php';
 		
-		//Build the SELECT clause to get the tracking info
-		$sql = "SELECT lat, long, speed, altitude, date_time FROM gps INNER JOIN pairs ON pairs.upload = gps.upload WHERE pairs.download = :dl ORDER BY date_time ASC";
-		
-		//Add the parameters
-		$statement = $pdo->prepare($sql);
-		$statement->bindValue(':dl', $dl, PDO::PARAM_STR);
-		
-		//Execute
-		$statement->execute();
-		$history = array();
-		$current_lat = 0;
-		$current_long = 0;
-		$prev_lat = 0;
-		$prev_long = 0;
-		$current_speed = 0;
-		$current_altitude = 0;
-		$current_time = 0;
-		$count = 0;
-		$distance = 0;
-		//Build the results up
-		while($row = $statement->fetch(PDO::FETCH_ASSOC)){
-			$h = array('latitude' => $row['lat'], 'longditude' => $row['long'], 'speed' => $row['speed'], 'altitude' => $row['altitude']);
-			array_push($history, $h);
+		try{
+			//Build the SELECT clause to get the tracking info
+			$sql = "SELECT lat, long, speed, altitude, date_time FROM gps INNER JOIN pairs ON pairs.upload = gps.upload WHERE pairs.download = :dl ORDER BY date_time ASC";
 			
-			$current_lat = $row['lat'];
-			$current_long = $row['long'];
-			$current_speed = $row['speed'];
-			$current_altitude = $row['altitude'];
-			$current_time = $row['date_time'];
+			//Add the parameters
+			$statement = $pdo->prepare($sql);
+			$statement->bindValue(':dl', $dl, PDO::PARAM_STR);
 			
-			//Add the distance between this point and the previous to the total distance
-			if($count > 0){
-				$distance += distance($current_lat, $current_long, $prev_lat, $prev_long);
+			//Execute
+			$statement->execute();
+			$history = array();
+			$current_lat = 0;
+			$current_long = 0;
+			$prev_lat = 0;
+			$prev_long = 0;
+			$current_speed = 0;
+			$current_altitude = 0;
+			$current_time = 0;
+			$count = 0;
+			$distance = 0;
+			//Build the results up
+			while($row = $statement->fetch(PDO::FETCH_ASSOC)){
+				$h = array('latitude' => $row['lat'], 'longditude' => $row['long'], 'speed' => $row['speed'], 'altitude' => $row['altitude']);
+				array_push($history, $h);
+				
+				$current_lat = $row['lat'];
+				$current_long = $row['long'];
+				$current_speed = $row['speed'];
+				$current_altitude = $row['altitude'];
+				$current_time = $row['date_time'];
+				
+				//Add the distance between this point and the previous to the total distance
+				if($count > 0){
+					$distance += distance($current_lat, $current_long, $prev_lat, $prev_long);
+				}
+				
+				//Store the current positions as the previous for the next iteration
+				$prev_lat = $current_lat;
+				$prev_long = $current_long;
+				
+				//Increase the counter
+				$count++;
 			}
 			
-			//Store the current positions as the previous for the next iteration
-			$prev_lat = $current_lat;
-			$prev_long = $current_long;
-			
-			//Increase the counter
-			$count++;
+			//If we haven't got any entries then send the user to a page telling them that.
+			if($count == 0){
+				header('Location: ../noinfo?i=1');
+			}
+		}catch(PDOException $e){
+			header('Location: ../noinfo?i=2');
 		}
 		
 		//Get the current URL to work out if they've come here via /tracker/?dl=abc OR /track/abc
@@ -220,13 +229,18 @@
 				var milliseconds = parseInt((duration%1000)/100)
 					, seconds = parseInt((duration/1000)%60)
 					, minutes = parseInt((duration/(1000*60))%60)
-					, hours = parseInt((duration/(1000*60*60))%24);
+					, hours = parseInt((duration/(1000*60*60))%24)
+					, days = Math.floor(duration/(1000*60*60*24));
 
+				var daysDisplay = '';
+				if(days > 0){
+					daysDisplay = days + ' days ';
+				}
 				hours = (hours < 10) ? "0" + hours : hours;
 				minutes = (minutes < 10) ? "0" + minutes : minutes;
 				seconds = (seconds < 10) ? "0" + seconds : seconds;
 
-				return hours + ":" + minutes + ":" + seconds;
+				return daysDisplay + hours + ":" + minutes + ":" + seconds;
 			}
 			
 			//Run some tests to show how the speed conversions work
@@ -328,7 +342,7 @@
 	</head>
 	<body>
 		<div id="info">
-			<div id="speed_bike" class="info_item"><img src="../resources/bike.png"/><p><span id="speed_mph">0</span>mph / <span id="speed_kph">0</span>kph</p></div><div id="speed_run" class="info_item"><img src="../resources/run.png"/><p><span id="speed_min_mile">0:00</span>/mile / <span id="speed_min_km">0:00</span>/km</p></div><div id="altitude" class="info_item"><img src="../resources/altitude.png"/><p><span id="alt_ft">0</span>ft / <span id="alt_m">0</span>m</p></div><div id="time" class="info_item"><img src="../resources/time.png"/><p><span id="time_ago">0:00</span> ago</p></div><div id="distance" class="info_item"><img src="../resources/distance.png"/><p><span id="distance_miles">0</span>miles / <span id="distance_km">0</span>km</p></div>
+			<div id="speed_bike" class="info_item"><img title="Bike speed" src="../resources/bike.png"/><p><span id="speed_mph">0</span>mph / <span id="speed_kph">0</span>kph</p></div><div id="speed_run" class="info_item"><img title="Run pace" src="../resources/run.png"/><p><span id="speed_min_mile">0:00</span>/mile / <span id="speed_min_km">0:00</span>/km</p></div><div id="altitude" class="info_item"><img title="Altitude" src="../resources/altitude.png"/><p><span id="alt_ft">0</span>ft / <span id="alt_m">0</span>m</p></div><div id="time" class="info_item"><img title="Time since last update" src="../resources/time.png"/><p><span id="time_ago">0:00</span> ago</p></div><div id="distance" class="info_item"><img title="Distance" src="../resources/distance.png"/><p><span id="distance_miles">0</span>miles / <span id="distance_km">0</span>km</p></div>
 		</div>
 		<div id="map-canvas"></div>
 	</body>
