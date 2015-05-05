@@ -9,9 +9,9 @@ A simple REST interface for uploading and viewing GPS coordinates. To be used in
 	* `reset` - `1` to clear the previous GPS coordinates. `0` to keep them
 	* `device` - a unique, secret, ID for the device.
   2. Initializing will create the SQLite database and generate an upload key used to add GPS coordinates to the database. The response will be a JSON string in the following format:
-  ```
-  {"success":true,"key":"DtBFiyiwvH62YfZ","device":"abc123"}
-  ```
+    ```
+    {"success":true,"key":"DtBFiyiwvH62YfZ","device":"abc123"}
+    ```
   3. The JSON string contains three fields:
     * `success` - true if the initialisation was a success
 	* `key` - The key to be used to upload GPS coordinates. The system will generate a key regardless of success so always check `success` before using the key
@@ -24,9 +24,9 @@ A simple REST interface for uploading and viewing GPS coordinates. To be used in
 	* `speed` _(optional)_ - The speed value (in m/s)
 	* `alt` _(optional)_ - The altitude (in m)
   5. The response to this will be a JSON string in the following format: 
-  ```
-  {"response":true,"date_time":"1430425590477"}
-  ```
+    ```
+    {"response":true,"date_time":"1430425590477"}
+    ```
   6.  The JSON string contains three fields:
     * `response` - true if the upload was successful
     * `date_time` - the timestamp provided when the upload was sent - allows you to match a response to a given upload request
