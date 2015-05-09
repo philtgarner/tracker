@@ -15,10 +15,12 @@ The following is an example API key, to generate your own:
 $GOOGLE_MAPS_API = "AIzaSyAyGbRV7R-QKqRumYvtwZHmi8d9oi9KZU0";
 
 //The maximum number of devices the system should allow to upload. Use this to stop people using your system to track their details. Set to < 0 to allow unlimited devices.
-$MAX_DEVICES = 5;
+$MAX_DEVICES = -1;
 
 try{
-	$pdo = new PDO('sqlite:../db/' . $DB_NAME);
+	//Get the path to the database files (this remains constant even if included in another directory)
+	$db_path = dirname(__FILE__) . '/../db';
+	$pdo = new PDO("sqlite:$db_path/$DB_NAME");
 	$pdo->setAttribute(PDO::ATTR_ERRMODE,PDO::ERRMODE_EXCEPTION);
 	//Turn of foreign keys
 	$pdo->exec( 'PRAGMA foreign_keys = ON;' );

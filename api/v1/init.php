@@ -20,15 +20,15 @@ Must provide the following to continue with initialization:
 	-Whether or not to reset (remove all entries for this download key)
 	-A device ID, once a device has registered a download key it may not be used by any other device
 */
-if(isset($_GET['down']) && isset($_GET['reset']) && isset($_GET['device'])){
+if(isset($_GET['dl']) && isset($_POST['reset']) && isset($_POST['device'])){
 	//Generate an upload key (secret between device and web service)
 	$up = generateRandomString();
-	$down = $_GET['down'];
-	$reset = $_GET['reset'];
-	$device = $_GET['device'];
+	$down = $_GET['dl'];
+	$reset = $_POST['reset'];
+	$device = $_POST['device'];
 
 	//Connect to the database
-	include '../resources/connect.php';
+	include dirname(__FILE__) . '/../../resources/connect.php';
 	
 	try{
 		//Build the database (connecting makes the file so this just builds the tables if they don't already exist)

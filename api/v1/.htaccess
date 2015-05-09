@@ -1,0 +1,5 @@
+RewriteEngine On    # Turn on the rewriting engine
+
+RewriteRule    ^init/([a-z0-9\-]+)    init.php?dl=$1 [NC,L]
+RewriteRule    ^update/([a-z0-9\-]+)    update.php?ul=$1 [NC,L]
+
