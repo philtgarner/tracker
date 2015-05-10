@@ -1,0 +1,4 @@
+#Files to ignore
+
+#Ignore any databases in use by the developer, these will be automatically generated whenever they're needed
+db/*.db
