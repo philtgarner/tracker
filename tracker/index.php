@@ -40,6 +40,11 @@
 				//Add the distance between this point and the previous to the total distance
 				if($count > 0){
 					$distance += distance($current_lat, $current_long, $prev_lat, $prev_long);
+					/*
+					//Used for debugging distance problems
+					$calc = distance($current_lat, $current_long, $prev_lat, $prev_long);
+					echo "Distance: $distance, Difference: $calc, Current: $current_lat, $current_long Previous: $prev_lat, $prev_long<br>";
+					*/
 				}
 				
 				//Store the current positions as the previous for the next iteration
@@ -94,9 +99,25 @@
 		<!-- Get the CSS file -->
 		<link href='../resources/main.css' rel='stylesheet' type='text/css'>
 		<!-- Get the Google Maps JavaScript library -->
-		<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=<?php echo $GOOGLE_MAPS_API; ?>"></script>
+		<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=<?php echo GOOGLE_MAPS_API; ?>"></script>
 		<!-- Get the JQuery library -->
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+		<?php
+			if(defined('GOOGLE_ANALYTICS_TRACKING_ID')){
+				echo "<!-- Google analytics code: -->
+		<script>
+			(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+			(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+			m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+			})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+			ga('create', '" . GOOGLE_ANALYTICS_TRACKING_ID . "', 'auto');
+			ga('send', 'pageview');
+
+		</script>";
+			}
+		?>
+		
 		<!-- The JavaScript to build the map with the path and markers -->
 		<script type="text/javascript">
 			var map;

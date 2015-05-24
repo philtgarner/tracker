@@ -51,13 +51,13 @@ if(isset($_GET['dl']) && isset($_POST['reset']) && isset($_POST['device'])){
 		
 		$device_max_reached = false;
 		//Check to see if we're at the maximum device limit. If $MAX_DEVICES is < 0 then no need to check - unlimited devices allowed.
-		if($MAX_DEVICES >= 0){
+		if(MAX_DEVICES >= 0){
 			$sql = "SELECT COUNT(DISTINCT device) AS cnt FROM pairs";
 			$statement = $pdo->prepare($sql);
 			$statement->execute();
 			//If the upload key has been used before then store the upload key and the ID of its owner
 			if($row = $statement->fetch(PDO::FETCH_ASSOC)){
-				if($row['cnt'] >= $MAX_DEVICES){
+				if($row['cnt'] >= MAX_DEVICES){
 					$device_max_reached = true;
 				}
 			}

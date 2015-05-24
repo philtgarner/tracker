@@ -3,6 +3,7 @@ A simple REST interface for uploading and viewing GPS coordinates. To be used in
 
 ##How to use
 1. Download ZIP file for this project and copy it to a directory on your website e.g. `www.example.org/mytracker`
+  1. Open the `resources/constants.php` file in a text editor and add your [Google Maps API](https://console.developers.google.com/project) key, maximum number of devices and [Google Analytics Tracking ID](http://www.google.com/analytics/) (optional) make sure the REST api and map viewer will work.
 2. Use an app on your phone to periodically upload the users location.
   1. The first call should be to `http://www.example.org/mytracker/api/v1/init/dl` (where `dl` is the download key that will be used to access view the tracking points) with the following `POST` parameters:
 	* `reset` - `1` to clear the previous GPS coordinates. `0` to keep them
