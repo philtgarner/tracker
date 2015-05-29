@@ -20,67 +20,44 @@
 			<div id="launcher">
 			<img id="header" src="../resources/icon.png" />
 			<h1>Raw tables</h1>
-			<h2>gps</h2>
+			
+			<table>
+				<tr>
+					<th colspan="7">gps</th>				
+					<th colspan="3">pairs</th>				
+				</tr>
+				<tr>
+					<th>id</th>
+					<th>upload</th>
+					<th>date_time</th>
+					<th>lat</th>
+					<th>long</th>
+					<th>speed</th>
+					<th>altitude</th>
+					
+					<th>download</th>
+					<th>upload</th>
+					<th>device</th>
+				</tr>
 			<?php
 					
 				include '../resources/connect.php';
 				
-				$sql = "SELECT * FROM gps";
+				$sql = "SELECT gps.id AS `gps.id`, gps.upload AS `gps.upload`, datetime(gps.date_time/1000, 'unixepoch') || ' (' || gps.date_time || ')' AS `gps.date_time`, gps.lat AS `gps.lat`, gps.long AS `gps.long`, gps.speed AS `gps.speed`, gps.altitude AS `gps.altitude`, pairs.download AS `pairs.download`, pairs.upload AS `pairs.upload`, pairs.device AS `pairs.device` FROM gps INNER JOIN pairs ON gps.upload=pairs.upload";
 				
 				$statement = $pdo->prepare($sql);
 				$statement->execute();
 				
-				$count = 0;
-				echo '<table>';
+				
 				while($row = $statement->fetch(PDO::FETCH_ASSOC)){
-					//Display the headers
-					if($count <= 0){
-						echo '<tr>';
-						foreach($row as $key => $r){
-							echo "<th>$key</th>";
-						}
-						echo '</tr>';
-					}
-					
 					echo '<tr>';
 					foreach($row as $key => $r){
 						echo "<td title=\"$key\">$r</td>";
 					}
 					echo '</tr>';
-					$count++;
 				}
-				echo '</table>';
 			?>
-			<h2>pairs</h2>
-			<?php
-					
-				$sql = "SELECT * FROM pairs";
-				
-				$statement = $pdo->prepare($sql);
-				$statement->execute();
-				
-				$count = 0;
-				echo '<table>';
-				while($row = $statement->fetch(PDO::FETCH_ASSOC)){
-					//Display the headers
-					if($count <= 0){
-						echo '<tr>';
-						foreach($row as $key => $r){
-							echo "<th>$key</th>";
-						}
-						echo '</tr>';
-					}
-					
-					echo '<tr>';
-					foreach($row as $key => $r){
-						echo "<td title=\"$key\">$r</td>";
-					}
-					echo '</tr>';
-					$count++;
-				}
-				echo '</table>';
-				
-			?>
+			</table>
 		</div>
 	</body>
 <html>

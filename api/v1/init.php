@@ -39,7 +39,7 @@ if(isset($_GET['dl']) && isset($_POST['reset']) && isset($_POST['device'])){
 		);');
 		
 		$pdo->query('CREATE TABLE IF NOT EXISTS gps(
-		id INT AUTO_INCRIMENT PRIMARY KEY,
+		id INTEGER PRIMARY KEY,
 		upload TEXT,
 		date_time TEXT,
 		lat REAL,
