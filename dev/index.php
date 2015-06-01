@@ -1,3 +1,14 @@
+<?php
+//Connect to the database and get the constants - may as well connect now, chances are they've got dev permissions if they've got this far
+include '../resources/connect.php';
+//If not in dev mode just take the user to the home page
+if(!defined('DEV_MODE') || !DEV_MODE){
+	header('Location: ..');
+}
+//If in dev mode then show the dev tools
+else{
+?>
+
 <!DOCTYPE html>
 <html>
 	<head>
@@ -41,7 +52,6 @@
 				</tr>
 			<?php
 					
-				include '../resources/connect.php';
 				
 				$sql = "SELECT gps.id AS `gps.id`, gps.upload AS `gps.upload`, datetime(gps.date_time/1000, 'unixepoch') || ' (' || gps.date_time || ')' AS `gps.date_time`, gps.lat AS `gps.lat`, gps.long AS `gps.long`, gps.speed AS `gps.speed`, gps.altitude AS `gps.altitude`, pairs.download AS `pairs.download`, pairs.upload AS `pairs.upload`, pairs.device AS `pairs.device` FROM gps INNER JOIN pairs ON gps.upload=pairs.upload";
 				
@@ -58,6 +68,24 @@
 				}
 			?>
 			</table>
+			
+			<h1>Constants</h1>
+			<table>
+				<tr><th>Constant</th><th>Value</th></tr>
+			<?php
+				$constants = get_defined_constants(true);
+				$user_constants = $constants['user'];
+				
+				foreach($user_constants as $k => $v){
+					echo "<tr><td>$k</td><td>$v</td></tr>";
+				}
+			?>
+			</table>
 		</div>
 	</body>
 <html>
+
+<?php
+//End of if developer mode
+}
+?>

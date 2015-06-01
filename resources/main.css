@@ -18,8 +18,15 @@ html, body {
 	padding: 0;
 }
 
-.info_item {
+.info_5{
 	width: 20%;
+}
+
+.info_4{
+	width: 25%;
+}
+
+.info_item {
 	height: 100px;
 	background-color:#008000;
 	margin: 0;

@@ -23,8 +23,24 @@ define('MAX_DEVICES', -1);
 
 /*
 A Google Analytics tracking ID if you wish to use GA to track visitors to the main page.
+http://www.google.com/analytics/
 Uncomment the following line and add your tracking ID to use GA
 */
 //define('GOOGLE_ANALYTICS_TRACKING_ID', 'Your tracking ID');
+
+//Customise the SPEED_MODE constant to show the speed of the person as either mph/kmph (cyclists) or miles/minute (runners). The default is both, in this case the speed will be shown in both formats.
+//Do not change this enum
+abstract class SpeedMode{
+	const Both = 0;
+	const Bike = 1;
+	const Run = 2;
+}
+
+//Change this to customise your speed mode
+define('SPEED_MODE', SpeedMode::Both);
+
+define('DEV_MODE', false);
+
+
 
 ?>

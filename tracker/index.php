@@ -75,6 +75,21 @@
 				}
 			}
 		}
+		
+		//Check to see if we're in bike mode, run mode or both
+		$info_type = 'info_5';
+		$bike_mode = true;
+		$run_mode = true;
+		if(defined('SPEED_MODE')){
+			if(SPEED_MODE == SpeedMode::Bike){
+				$info_type = 'info_4';
+				$run_mode = false;
+			}
+			else if(SPEED_MODE == SpeedMode::Run){
+				$info_type = 'info_4';
+				$bike_mode = false;
+			}
+		}
 	}
 	//If the download key is not set send the user back to the home page
 	else{
@@ -159,10 +174,10 @@
 							//Update current stats
 							time = success.time;	//The time will get updated within one second
 							distance += success.distance;
-							$('#speed_mph').html(msToMPH(success.speed));
-							$('#speed_kph').html(msToKPH(success.speed));
-							$('#speed_min_mile').html(msToMinMile(success.speed));
-							$('#speed_min_km').html(msToMinKM(success.speed));
+							<?php echo ($bike_mode ? "$('#speed_mph').html(msToMPH(success.speed));" : ''); ?>
+							<?php echo ($bike_mode ? "$('#speed_kph').html(msToKPH(success.speed));" : ''); ?>
+							<?php echo ($run_mode ? "$('#speed_min_mile').html(msToMinMile(success.speed));" : ''); ?>
+							<?php echo ($run_mode ? "$('#speed_min_km').html(msToMinKM(success.speed));" : ''); ?>
 							$('#alt_m').html(success.altitude);
 							$('#alt_ft').html(mToFt(success.altitude));
 							$('#distance_km').html(distance.toFixed(2));
@@ -342,10 +357,10 @@
 
 
 			//Set display fields
-			$('#speed_mph').html(msToMPH(<?php echo $current_speed;?>));
-			$('#speed_kph').html(msToKPH(<?php echo $current_speed;?>));
-			$('#speed_min_mile').html(msToMinMile(<?php echo $current_speed;?>));
-			$('#speed_min_km').html(msToMinKM(<?php echo $current_speed;?>));
+			<?php echo ($bike_mode ? "$('#speed_mph').html(msToMPH($current_speed));" : ''); ?>
+			<?php echo ($bike_mode ? "$('#speed_kph').html(msToKPH($current_speed));" : ''); ?>
+			<?php echo ($run_mode ? "$('#speed_min_mile').html(msToMinMile($current_speed));" : ''); ?>
+			<?php echo ($run_mode ? "$('#speed_min_km').html(msToMinKM($current_speed));" : ''); ?>
 			$('#alt_m').html(<?php echo $current_altitude;?>);
 			$('#alt_ft').html(mToFt(<?php echo $current_altitude;?>));
 			$('#time_ago').html(millisToTime(time));
@@ -363,7 +378,9 @@
 	</head>
 	<body>
 		<div id="info">
-			<div id="speed_bike" class="info_item"><img title="Bike speed" src="../resources/bike.png"/><p><span id="speed_mph">0</span>mph / <span id="speed_kph">0</span>kph</p></div><div id="speed_run" class="info_item"><img title="Run pace" src="../resources/run.png"/><p><span id="speed_min_mile">0:00</span>/mile / <span id="speed_min_km">0:00</span>/km</p></div><div id="altitude" class="info_item"><img title="Altitude" src="../resources/altitude.png"/><p><span id="alt_ft">0</span>ft / <span id="alt_m">0</span>m</p></div><div id="time" class="info_item"><img title="Time since last update" src="../resources/time.png"/><p><span id="time_ago">0:00</span> ago</p></div><div id="distance" class="info_item"><img title="Distance" src="../resources/distance.png"/><p><span id="distance_miles">0</span>miles / <span id="distance_km">0</span>km</p></div>
+		
+			<?php ($user['is_logged_in'] ? $user['first_name'] : 'Guest')  ?>
+			<?php echo ($bike_mode ? "<div id=\"speed_bike\" class=\"info_item $info_type\"><img title=\"Bike speed\" src=\"../resources/bike.png\"/><p><span id=\"speed_mph\">0</span>mph / <span id=\"speed_kph\">0</span>kph</p></div>" : ''); echo ($run_mode ? "<div id=\"speed_run\" class=\"info_item $info_type\"><img title=\"Run pace\" src=\"../resources/run.png\"/><p><span id=\"speed_min_mile\">0:00</span>/mile / <span id=\"speed_min_km\">0:00</span>/km</p></div>" : ''); ?><div id="altitude" class="info_item <?php echo $info_type;?>"><img title="Altitude" src="../resources/altitude.png"/><p><span id="alt_ft">0</span>ft / <span id="alt_m">0</span>m</p></div><div id="time" class="info_item <?php echo $info_type;?>"><img title="Time since last update" src="../resources/time.png"/><p><span id="time_ago">0:00</span> ago</p></div><div id="distance" class="info_item <?php echo $info_type;?>"><img title="Distance" src="../resources/distance.png"/><p><span id="distance_miles">0</span>miles / <span id="distance_km">0</span>km</p></div>
 		</div>
 		<div id="map-canvas"></div>
 	</body>
