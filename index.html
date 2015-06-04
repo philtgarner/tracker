@@ -20,53 +20,100 @@
 
     <section class="main-content">
       <h1>
-<a id="a-simple-system-for-recording-location-data" class="anchor" href="#a-simple-system-for-recording-location-data" aria-hidden="true"><span class="octicon octicon-link"></span></a>A simple system for recording location data</h1>
+<a id="tracker" class="anchor" href="#tracker" aria-hidden="true"><span class="octicon octicon-link"></span></a>tracker</h1>
 
-<p>This system includes both a RESTful API to upload location data and the web pages used to view them. It was designed as a means to track users as they run/cycle and should be used in conjunction with a smartphone app to upload the GPS data.</p>
-
-<h2>
-<a id="sqlite" class="anchor" href="#sqlite" aria-hidden="true"><span class="octicon octicon-link"></span></a>SQLite</h2>
-
-<p>All data is stored in an SQLite database so there is no need to create and maintain MySQL (or similar) databases.</p>
+<p>A simple REST interface for uploading and viewing GPS coordinates. To be used in conjunction with a client app.</p>
 
 <h2>
-<a id="map-viewer" class="anchor" href="#map-viewer" aria-hidden="true"><span class="octicon octicon-link"></span></a>Map viewer</h2>
+<a id="how-to-use" class="anchor" href="#how-to-use" aria-hidden="true"><span class="octicon octicon-link"></span></a>How to use</h2>
 
-<p>The project includes a viewer allowing spectators to locate the user, this uses the <a href="https://developers.google.com/maps/documentation/javascript/">Google Maps JavaScript v3 API</a> to display the current location and is updated periodically with AJAX calls.</p>
+<ol>
+<li>Download ZIP file for this project and copy it to a directory on your website e.g. <code>www.example.org/mytracker</code>
 
-<h1>
-<a id="how-it-works" class="anchor" href="#how-it-works" aria-hidden="true"><span class="octicon octicon-link"></span></a>How it works</h1>
-
-<h2>
-<a id="initialization" class="anchor" href="#initialization" aria-hidden="true"><span class="octicon octicon-link"></span></a>Initialization</h2>
-
-<p>First you need to make a call to <code>init.php</code> to register the device and initialize the database. The call will look something like this:</p>
-
-<p><code>/api/init.php?down=test&amp;reset=1&amp;device=abc123</code></p>
+<ol>
+<li>Open the <code>resources/constants.php</code> file in a text editor and customise the following constants, the majority of them can be left as their default values but it's worth checking:
 
 <ul>
 <li>
-<code>down</code> is the friendly name that people will use to access the tracking information</li>
+<code>GOOGLE_MAPS_API</code> - Add your <a href="https://console.developers.google.com/project">Google Maps API</a> key</li>
 <li>
-<code>reset</code> should be set to <code>1</code> to clear all previous data for this download key, <code>0</code> if you don't want to clear</li>
-<li>device is the device ID that prevents others from hijacking the tracking. This should be a random string that remains constant for each device.</li>
+<code>MAX_DEVICES</code> - Maximum number of devices, use -1 for unlimited devices <em>(default: -1)</em>
+</li>
+<li>
+<code>SPEED_MODE</code> - Tells the system whether to show speeds for cyclists, runners or both. <em>(default: both)</em>
+</li>
+<li>
+<code>DEV_MODE</code> - Enables developer options such as viewing the SQLite tables and constants, if you're not a developer leave this mode off <em>(default: false)</em>
+</li>
+<li>
+<code>GOOGLE_ANALYTICS_TRACKING_ID</code> - <a href="http://www.google.com/analytics/">Google Analytics Tracking ID</a> <em>(optional) (default: none set)</em>
+</li>
 </ul>
+</li>
+</ol>
+</li>
+<li>Use an app on your phone to periodically upload the users location.
 
-<p>The response from this will be a JSON string that looks like this:</p>
-
-<pre><code>{"success":true,
-"key":"SrQWD1KxxZOUMRO",
-"device":"abc123"}
-</code></pre>
+<ol>
+<li>The first call should be to <code>http://www.example.org/mytracker/api/v1/init/dl</code> (where <code>dl</code> is the download key that will be used to access view the tracking points) with the following <code>POST</code> parameters:
 
 <ul>
 <li>
-<code>success</code> is set to <code>true</code> if the initialization has worked, <code>false</code> otherwise</li>
+<code>reset</code> - <code>1</code> to clear the previous GPS coordinates. <code>0</code> to keep them</li>
 <li>
-<code>key</code> is the upload key that is used to add data to the database, this should remain secret, there is no need for the user to be aware of it</li>
-<li>
-<code>device</code> is the ID of the device making the request</li>
+<code>device</code> - a unique, secret, ID for the device.</li>
 </ul>
+</li>
+<li>Initializing will create the SQLite database and generate an upload key used to add GPS coordinates to the database. The response will be a JSON string in the following format:
+<code>
+{"success":true,"key":"DtBFiyiwvH62YfZ","device":"abc123"}
+</code>
+</li>
+<li>The JSON string contains three fields:
+
+<ul>
+<li>
+<code>success</code> - true if the initialisation was a success</li>
+<li>
+<code>key</code> - The key to be used to upload GPS coordinates. The system will generate a key regardless of success so always check <code>success</code> before using the key</li>
+<li>
+<code>device</code> - The device ID which was originally given</li>
+</ul>
+</li>
+<li>After successful initialisation coordinates can be uploaded by accessing <code>http://www.example.org/mytracker/api/v1/update/ul</code> (where <code>ul</code> is the upload key that is used to add coordinates to the database) with the following <code>POST</code> parameters:
+
+<ul>
+<li>
+<code>lat</code> - The latitude value</li>
+<li>
+<code>long</code> - The longditude value</li>
+<li>
+<code>dt</code> - The timestamp for the coordinates (in milliseconds since midnight 1 January 1970)</li>
+<li>
+<code>speed</code> <em>(optional)</em> - The speed value (in m/s)</li>
+<li>
+<code>alt</code> <em>(optional)</em> - The altitude (in m)</li>
+</ul>
+</li>
+<li>The response to this will be a JSON string in the following format: 
+<code>
+{"response":true,"date_time":"1430425590477"}
+</code>
+</li>
+<li> The JSON string contains three fields:
+
+<ul>
+<li>
+<code>response</code> - true if the upload was successful</li>
+<li>
+<code>date_time</code> - the timestamp provided when the upload was sent - allows you to match a response to a given upload request</li>
+</ul>
+</li>
+<li>Repeat <em>2.4 - 2.6</em> periodically to provide live tracking</li>
+</ol>
+</li>
+<li>Details of your position can be viewed by accessing <code>http://www.example.org/mytracker/download</code> where <code>download</code> is the download key set in step <em>2.1</em>.</li>
+</ol>
 
       <footer class="site-footer">
         <span class="site-footer-owner"><a href="https://github.com/philtgarner/tracker">Tracker</a> is maintained by <a href="https://github.com/philtgarner">philtgarner</a>.</span>
@@ -82,7 +129,7 @@
           </script>
           <script type="text/javascript">
             try {
-              var pageTracker = _gat._getTracker("UA-61495344-1");
+              var pageTracker = _gat._getTracker("UA-51488133-3");
             pageTracker._trackPageview();
             } catch(err) {}
           </script>
