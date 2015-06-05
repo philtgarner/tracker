@@ -6,7 +6,7 @@
 		
 		//Need to look for all points that happened later than or at the same time as the previous record.
 		//Need to include the previous record to get the distance right
-		$sql = 'SELECT lat, long, speed, altitude, date_time FROM gps INNER JOIN pairs ON pairs.upload = gps.upload WHERE pairs.download = :dl AND date_time >= :time';
+		$sql = 'SELECT lat, long, speed, altitude, date_time FROM gps INNER JOIN pairs ON pairs.upload = gps.upload WHERE pairs.download = :dl AND date_time >= :time ORDER BY date_time ASC';
 		$statement = $pdo->prepare($sql);
 		$statement->bindValue(':dl', $_GET['dl'], PDO::PARAM_STR);
 		$statement->bindValue(':time', $_GET[timestamp], PDO::PARAM_INT);

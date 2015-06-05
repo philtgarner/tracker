@@ -26,6 +26,9 @@ else{
 		<meta property="og:image" content="../resources/icon.png"/>
 		<!-- Get the CSS file -->
 		<link href='../resources/main.css' rel='stylesheet' type='text/css'>
+		<?php
+			include '../resources/ga_tracker.php';
+		?>
 	</head>
 	<body>
 			<div id="launcher">

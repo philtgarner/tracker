@@ -16,6 +16,10 @@
 		<meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0' name='viewport' />
 		<!-- Facebook sharing image-->
 		<meta property="og:image" content="resources/icon.png"/>
+		<?php
+			include './resources/constants.php';
+			include './resources/ga_tracker.php';
+		?>
 	</head>
 	<body>
 		<div id="launcher">
