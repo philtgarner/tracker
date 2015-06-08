@@ -296,7 +296,8 @@
 			//Set the zoom and centre the map over the latest position
 			var mapOptions = {
 				center: { lat: <?php echo $current_lat; ?>, lng: <?php echo $current_long; ?>},
-				zoom: 16
+				zoom: 16,
+				mapTypeId: google.maps.MapTypeId.TERRAIN
 			};
 			//Set the map location
 			map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
