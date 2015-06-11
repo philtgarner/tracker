@@ -35,4 +35,5 @@ A simple REST interface for uploading and viewing GPS coordinates. To be used in
     * `response` - true if the upload was successful
     * `date_time` - the timestamp provided when the upload was sent - allows you to match a response to a given upload request
   7. Repeat _2.4 - 2.6_ periodically to provide live tracking
-3. Details of your position can be viewed by accessing `http://www.example.org/mytracker/download` where `download` is the download key set in step _2.1_.
+3. Details of your position can be viewed by accessing `http://www.example.org/mytracker/track/download` where `download` is the download key set in step _2.1_.
+4. GPX files can be downloaded for each route by accessing `http://www.example.org/mytracker/track/download.gpx` where `download` is the download key set in step _2.1_.
