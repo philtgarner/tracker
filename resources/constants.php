@@ -39,8 +39,10 @@ abstract class SpeedMode{
 //Change this to customise your speed mode
 define('SPEED_MODE', SpeedMode::Both);
 
+//True if in developer mode, false otherwise
 define('DEV_MODE', false);
 
-
+//The creator name for GPX exports
+define('GPX_CREATOR', 'Location Tracker by Philip Garner');
 
 ?>

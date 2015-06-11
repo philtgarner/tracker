@@ -1,4 +1,5 @@
 RewriteEngine On    # Turn on the rewriting engine
 
+RewriteRule    ^track/([a-z0-9\-]+).gpx$    tracker/gpx.php?dl=$1 [NC,L]
 RewriteRule    ^track/([a-z0-9\-]+)    tracker/index.php?dl=$1 [NC,L]
 
