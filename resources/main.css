@@ -12,10 +12,11 @@ html, body {
 }
 
 #info {
-	height: 100px;
+	height: 80px;
 	background-color: #33AD33;
 	margin: 0;
 	padding: 0;
+	max-height: 80px;
 }
 
 .info_5{
@@ -27,27 +28,63 @@ html, body {
 }
 
 .info_item {
-	height: 100px;
+	height: 80px;
 	background-color:#008000;
 	margin: 0;
 	padding: 0;
 	display: inline-block;
 	vertical-align: top;
+	max-height: 80px;
 }
 
 .info_item img {
 	display: block;
 	margin-left: auto;
 	margin-right: auto;
+	max-width: 95%;
+	max-height: 55%;
 }
 
 .info_item p {
 	text-align: center;
 	font-family: 'Yanone Kaffeesatz',sans-serif;
-	font-size: 20px;
+	font-size: 20;
 	padding: 0;
 	margin: 0;
 	color: #ffffff;
+}
+
+#graph{
+	width: 100%;
+	height: 100%;
+}
+
+img.loading{
+	margin-left: auto;
+	margin-right: auto;
+	display: block;
+	padding-top: 50px;
+}
+
+pre.code_middle {
+	text-align: center;
+}
+
+#graph_drop{
+	background-color:#008000;
+	height: 20px;
+	position: relative;
+}
+
+#graph_drop img{
+	display: block;
+	margin-right: auto;
+	margin-left: auto;
+	max-height: 50%;
+	position: absolute;
+	bottom: 0;
+	left: 0;
+	right: 0;
 }
 
 #launcher{

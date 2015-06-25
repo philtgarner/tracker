@@ -22,7 +22,7 @@
 		$history = array();
 		$count = 0;
 		while($row = $statement->fetch(PDO::FETCH_ASSOC)){
-			$h = array('latitude' => $row['lat'], 'longditude' => $row['long']);
+
 			
 			$current_lat = $row['lat'];
 			$current_long = $row['long'];
@@ -33,6 +33,12 @@
 			//If we're on the second or later point then store it and add the distance
 			if($count > 0){
 				$distance += distance($current_lat, $current_long, $prev_lat, $prev_long);
+				$h = array(
+					'latitude' => $row['lat'],
+					'longditude' => $row['long'],
+					'speed' => $row['speed'],
+					'altitude' => $row['altitude'],
+					'distance' => $distance);				
 				array_push($history, $h);
 			}
 			

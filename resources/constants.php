@@ -45,4 +45,19 @@ define('DEV_MODE', false);
 //The creator name for GPX exports
 define('GPX_CREATOR', 'Location Tracker by Philip Garner');
 
+//Default unit of measurement (used in graphs, both used elsewhere)
+abstract class UnitOfMeasure{
+	const Imperial = 0;		//Miles, feet
+	const Metric = 1;		//KM, metres
+}
+define('UNIT_OF_MEASURE', UnitOfMeasure::Metric);
+
+//Constants for the emulator (part of the developer mode)
+//The device ID for the emulator
+define('EMULATOR_ID', '1234');
+//The download key for the emulator
+define('EMULATOR_DOWNLOAD', 'emulator');
+//The API version for the emulator to use
+define('EMULATOR_API_VERSION', 'v1');
+
 ?>
