@@ -36,6 +36,9 @@ abstract class SpeedMode{
 	const Run = 2;
 }
 
+//The time at which the ride is considered old (greying out) (in milliseconds)
+define('OLD_TIME_LIMIT', 21600000);
+
 //Change this to customise your speed mode
 define('SPEED_MODE', SpeedMode::Both);
 

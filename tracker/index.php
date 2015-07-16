@@ -107,6 +107,9 @@
 			$distance_multiplier = 1;
 		}
 		
+		//Get the expiration date (when everything goes grey)
+		$expiry_time = microtime(true)*1000-OLD_TIME_LIMIT;
+		
 	}
 	//If the download key is not set send the user back to the home page
 	else{
@@ -156,6 +159,7 @@
 			var time = <?php echo $current_time; ?>;
 			var distance = <?php echo $distance; ?>;
 			var dl = '<?php echo $dl; ?>';
+			var expiry = <?php echo $expiry_time;?>;
 			//The frequency with which the timer is updated (milliseconds)
 			var updateTimer = 1000;
 			//The frequency with which the map is updated (milliseconds)
@@ -252,6 +256,10 @@
 						}
 						else{
 							//No updates to be done
+							if(time < expiry){
+								$('#info').addClass('old');
+								$('#graph_drop').addClass('old');
+							}
 							//console.log('No updates');
 						}
 					}
@@ -625,10 +633,11 @@
 		</script>
 	</head>
 	<body>
-		<div id="info">
+		<div id="info" <?php echo ($current_time < $expiry_time ? 'class="old"' : '' );?>>
+			
 			<?php echo ($bike_mode ? "<div id=\"speed_bike\" class=\"info_item $info_type\"><img title=\"Bike speed\" src=\"../resources/bike.png\"/><p><span id=\"speed_mph\">0</span>mph / <span id=\"speed_kph\">0</span>kph</p></div>" : ''); echo ($run_mode ? "<div id=\"speed_run\" class=\"info_item $info_type\"><img title=\"Run pace\" src=\"../resources/run.png\"/><p><span id=\"speed_min_mile\">0:00</span>/mile / <span id=\"speed_min_km\">0:00</span>/km</p></div>" : ''); ?><div id="altitude" class="info_item <?php echo $info_type;?>"><img title="Altitude" src="../resources/altitude.png"/><p><span id="alt_ft">0</span>ft / <span id="alt_m">0</span>m</p></div><div id="time" class="info_item <?php echo $info_type;?>"><img title="Time since last update" src="../resources/time.png"/><p><span id="time_ago">0:00</span> ago</p></div><div id="distance" class="info_item <?php echo $info_type;?>"><img title="Distance" src="../resources/distance.png"/><p><span id="distance_miles">0</span>miles / <span id="distance_km">0</span>km</p></div>
 		</div>
-		<div id="graph_drop">
+		<div id="graph_drop" <?php echo ($current_time < $expiry_time ? 'class="old"' : '' ); ?>>
 			<img src="../resources/drop_arrow.png" />
 		</div>
 		<div id="graph" style="height: 0px;"><img class="loading" src="../resources/loading.gif" /></div>
